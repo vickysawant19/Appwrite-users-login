@@ -15,7 +15,7 @@ function App() {
      <div className='container  mx-auto'>
       
       <PrivateRoute>
-      <Navbar/>
+        <Navbar/>
         <Outlet/>
 
       </PrivateRoute>
