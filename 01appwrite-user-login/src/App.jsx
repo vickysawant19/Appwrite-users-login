@@ -1,18 +1,27 @@
 import { useState } from 'react'
 
 import './App.css'
-import Navbar from './components/Navbar'
+import Navbar from './components/private/Navbar'
 import { Outlet } from 'react-router-dom'
+import PrivateRoute from './utils/PrivateRoute'
+
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
     <>
      <div className='container  mx-auto'>
-     <Navbar/>
-      <Outlet/>
+      
+      <PrivateRoute>
+      <Navbar/>
+        <Outlet/>
+
+      </PrivateRoute>
+        
+     
+     
      
 
      </div>
