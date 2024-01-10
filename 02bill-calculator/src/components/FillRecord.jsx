@@ -17,7 +17,9 @@ const FillRecord = ({ totalBill }) => {
   function handlePastChange(index, value) {
     setCustomer((prev) => {
       const updatedCust = [...prev];
-      updatedCust[index].prevUnits = parseInt(value) || 0;
+      if (value >= 0) {
+        updatedCust[index].prevUnits = value;
+      }
 
       return updatedCust;
     });
@@ -26,7 +28,9 @@ const FillRecord = ({ totalBill }) => {
   function handleLatestChange(index, value) {
     setCustomer((prev) => {
       const updatedCust = [...prev];
-      updatedCust[index].latestUnits = parseInt(value) || 0;
+      if (value >= 0) {
+        updatedCust[index].latestUnits = value;
+      }
       return updatedCust;
     });
   }
@@ -70,7 +74,6 @@ const FillRecord = ({ totalBill }) => {
           <div key={i} className="grid grid-cols-3 gap-2 m-2">
             <h1>Customer {i + 1} </h1>
             <input
-              min={0}
               onChange={(e) => handlePastChange(i, e.target.value)}
               value={customer.prevUnits || "0"}
               name="lastMonth"
@@ -78,7 +81,6 @@ const FillRecord = ({ totalBill }) => {
               type="number"
             />
             <input
-              min={customer.prevUnits}
               onChange={(e) => handleLatestChange(i, e.target.value)}
               value={customer.latestUnits || "0"}
               name="thisMonth"
