@@ -92,11 +92,11 @@ const FillRecord = ({ totalBill }) => {
   }
 
   return (
-    <div className="p-1 bg-black">
-      <h1 className="uppercase text-center p-2 bg-blue-950 text-white mx-2 ">
+    <div className="bg-black">
+      <h1 className="uppercase text-center py-2 bg-blue-950 text-white ">
         Add customer Unit Details:
       </h1>
-      <div className="text-white m-4 rounded-xl p-2 ">
+      <div className="text-white m-2 rounded-xl p-2 ">
         <div className="grid grid-cols-3 text-gray-600 text-center bg-gray-900 p-2 rounded pb-2">
           <h1 className="text-gray-500">Name</h1>
           <h1 className="text-gray-500">Previous units</h1>
@@ -106,14 +106,14 @@ const FillRecord = ({ totalBill }) => {
         {customer.map((customer, i) => (
           <div
             key={i}
-            className="grid items-center grid-cols-3 p-1 gap-2 my-1 text-center bg-gray-900 rounded"
+            className="grid items-center grid-cols-3 p-2 text-xl gap-2 my-1 text-center bg-gray-900 rounded"
           >
             <h1>Customer {i + 1} </h1>
             <input
               onChange={(e) => handlePastChange(i, e.target.value)}
               value={customer.prevUnits || ""}
               name="lastMonth"
-              className="border border-gray-500 bg-black  p-1 text-center w-32 mx-auto rounded-md"
+              className="border border-gray-500 bg-black  p-1 text-center mx-auto rounded-md w-full"
               type="number"
             />
             <input
@@ -122,7 +122,7 @@ const FillRecord = ({ totalBill }) => {
               onChange={(e) => handleLatestChange(i, e.target.value)}
               value={customer.latestUnits || ""}
               name="thisMonth"
-              className="border border-gray-500 bg-black  p-1 text-center w-32 mx-auto rounded-md"
+              className="border border-gray-500 bg-black  p-1 text-center  mx-auto rounded-md w-full"
               type="number"
             />
           </div>
@@ -148,11 +148,11 @@ const FillRecord = ({ totalBill }) => {
           Calculate
         </button>
       </div>
-      <div className="text-white  m-2  ">
+      <div className="text-white ">
         <h1 className="uppercase text-center p-2 bg-blue-950">
           Calculated Bill
         </h1>
-        <div className="text-white mt-2 m-2 rounded-xl   p-2">
+        <div className="text-white mt-2 m-2 rounded-xl p-2">
           <div className="grid grid-cols-3 text-gray-600 text-center bg-gray-900 p-2 rounded pb-2">
             <h1>Name </h1>
             <h1>Total Unit</h1>
