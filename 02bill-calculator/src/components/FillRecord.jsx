@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const FillRecord = ({ totalBill }) => {
-  const [customer, setCustomer] = useState([]);
+  const [customer, setCustomer] = useState([
+    { prevUnits: 0, latestUnits: 0, totalUnits: 0, ratio: 0, bill: 0 },
+  ]);
+  // useEffect(() => {
+  //   setCustomer([]);
+  // }, []);
 
   function handleAdd() {
     setCustomer((prev) => [
       ...prev,
-      { prevUnits: 0, latestUnits: 0, totalUnits: 0, ratio: 0 },
+      { prevUnits: 0, latestUnits: 0, totalUnits: 0, ratio: 0, bill: 0 },
     ]);
   }
 
@@ -18,8 +23,10 @@ const FillRecord = ({ totalBill }) => {
     setCustomer((prev) => {
       const updatedCust = [...prev];
       if (value >= 0) {
-        updatedCust[index].prevUnits = value;
+        updatedCust[index].prevUnits = parseInt(value);
       }
+      calculateTotalUnitUsed(index);
+      handlecalculate();
 
       return updatedCust;
     });
@@ -29,8 +36,11 @@ const FillRecord = ({ totalBill }) => {
     setCustomer((prev) => {
       const updatedCust = [...prev];
       if (value >= 0) {
-        updatedCust[index].latestUnits = value;
+        updatedCust[index].latestUnits = parseInt(value);
       }
+      calculateTotalUnitUsed(index);
+      handlecalculate();
+
       return updatedCust;
     });
   }
@@ -41,50 +51,78 @@ const FillRecord = ({ totalBill }) => {
       allUnitsUsed = cust.totalUnits + allUnitsUsed;
     });
 
-    const ratio =
-      allUnitsUsed !== 0 ? customer[index].totalUnits / allUnitsUsed : 0;
+    setCustomer((prev) => {
+      const updatedCustomer = [...prev];
 
-    return ratio;
+      updatedCustomer[index].ratio =
+        allUnitsUsed !== 0
+          ? updatedCustomer[index].totalUnits / allUnitsUsed
+          : 0;
+      return updatedCustomer;
+    });
   }
 
   function calculateTotalUnitUsed(index) {
-    customer[index].totalUnits =
-      customer[index].latestUnits - customer[index].prevUnits;
-    customer[index].ratio = calculateRatio(index);
-    return customer[index].totalUnits;
+    setCustomer((prev) => {
+      const updatedCustomers = [...prev];
+      const prevU = updatedCustomers[index].prevUnits;
+      const latestU = updatedCustomers[index].latestUnits;
+
+      if (prevU > latestU) {
+        updatedCustomers[index].totalUnits = 0;
+      } else {
+        updatedCustomers[index].totalUnits = latestU - prevU;
+      }
+
+      return updatedCustomers;
+    });
   }
 
-  function calculateBill(index) {
-    return (customer[index].ratio * totalBill).toFixed(2);
+  function handlecalculate() {
+    customer.map((customer, index) => {
+      calculateRatio(index);
+      setCustomer((prev) => {
+        const updatedCustomer = [...prev];
+        updatedCustomer[index].bill = (
+          updatedCustomer[index].ratio * totalBill
+        ).toFixed(2);
+        return updatedCustomer;
+      });
+    });
   }
 
   return (
     <div className="p-1 bg-black">
-      <h1 className="text-white ml-4 underline-offset-4 underline">
+      <h1 className="uppercase text-center p-2 bg-blue-950 text-white mx-2 ">
         Add customer Unit Details:
       </h1>
-      <div className="text-white m-4 border rounded-xl p-2 ">
-        <div className="grid grid-cols-3 gap-2 m-2">
+      <div className="text-white m-4 rounded-xl p-2 ">
+        <div className="grid grid-cols-3 text-gray-600 text-center bg-gray-900 p-2 rounded pb-2">
           <h1 className="text-gray-500">Name</h1>
           <h1 className="text-gray-500">Previous units</h1>
           <h1 className="text-gray-500">Latest units</h1>
         </div>
 
         {customer.map((customer, i) => (
-          <div key={i} className="grid grid-cols-3 gap-2 m-2">
+          <div
+            key={i}
+            className="grid items-center grid-cols-3 p-1 gap-2 my-1 text-center bg-gray-900 rounded"
+          >
             <h1>Customer {i + 1} </h1>
             <input
               onChange={(e) => handlePastChange(i, e.target.value)}
               value={customer.prevUnits || ""}
               name="lastMonth"
-              className="border border-white bg-black rounded p-1"
+              className="border border-gray-500 bg-black  p-1 text-center w-32 mx-auto rounded-md"
               type="number"
             />
             <input
+              min={customer.prevUnits}
+              autoCorrect="true"
               onChange={(e) => handleLatestChange(i, e.target.value)}
               value={customer.latestUnits || ""}
               name="thisMonth"
-              className="border border-white bg-black rounded p-1"
+              className="border border-gray-500 bg-black  p-1 text-center w-32 mx-auto rounded-md"
               type="number"
             />
           </div>
@@ -95,32 +133,40 @@ const FillRecord = ({ totalBill }) => {
           onClick={handleAdd}
           className="text-white border p-2 bg-green-700 hover:bg-green-800 rounded w-20"
         >
-          add
+          Add
         </button>
         <button
           onClick={handleRemove}
           className="text-white border p-2 bg-red-700 hover:bg-red-800 rounded w-20"
         >
-          remove
+          Remove
+        </button>
+        <button
+          onClick={handlecalculate}
+          className="text-white border p-2 bg-blue-700 hover:bg-blue-800 rounded w-20"
+        >
+          Calculate
         </button>
       </div>
-      <div className="text-white  m-2 border-t ">
-        <h1 className="uppercase text-center">Calculated Bill</h1>
-        <div className="text-white mt-2 m-2 rounded-xl  border p-2">
-          <div className="grid grid-cols-3 text-gray-600 mx-2 text-center">
+      <div className="text-white  m-2  ">
+        <h1 className="uppercase text-center p-2 bg-blue-950">
+          Calculated Bill
+        </h1>
+        <div className="text-white mt-2 m-2 rounded-xl   p-2">
+          <div className="grid grid-cols-3 text-gray-600 text-center bg-gray-900 p-2 rounded pb-2">
             <h1>Name </h1>
             <h1>Total Unit</h1>
             <h1>Total Bill</h1>
           </div>
 
-          {customer.map((customer, index) => (
+          {customer?.map((customer, index) => (
             <div
               key={index}
-              className="grid grid-cols-3 p-2 rounded text-center "
+              className="grid grid-cols-3 p-2 my-1 text-center bg-gray-900 rounded"
             >
               <h1>Customer {index + 1} </h1>
-              <p>{calculateTotalUnitUsed(index)}</p>
-              <p>{calculateBill(index)}</p>
+              <p>{customer.totalUnits}</p>
+              <p>{customer.bill}</p>
             </div>
           ))}
         </div>
