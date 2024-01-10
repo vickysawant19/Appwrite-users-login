@@ -12,19 +12,11 @@ function App() {
 
   return (
     <>
-     <div className='container  mx-auto'>
-      
+
       <PrivateRoute>
         <Navbar/>
         <Outlet/>
-
       </PrivateRoute>
-        
-     
-     
-     
-
-     </div>
     
     </>
   )

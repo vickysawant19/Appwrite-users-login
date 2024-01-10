@@ -6,6 +6,7 @@ import {createBrowserRouter, createRoutesFromElements , Route , RouterProvider, 
 import Login from './components/Login.jsx'
 import Home from './components/private/Home.jsx'
 import { AuthProvider } from './utils/AuthContext.jsx'
+import Profile from './components/private/Profile.jsx'
 
 
 
@@ -15,6 +16,7 @@ import { AuthProvider } from './utils/AuthContext.jsx'
     <Route path='login' element={<Login/>}/>
   <Route path='' element={<App/>}>
     <Route path="/" index element={<Home/>}/>
+    <Route path="profile" index element={<Profile/>}/>
   </Route>
   </Route>
   
