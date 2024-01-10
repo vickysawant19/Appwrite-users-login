@@ -75,14 +75,14 @@ const FillRecord = ({ totalBill }) => {
             <h1>Customer {i + 1} </h1>
             <input
               onChange={(e) => handlePastChange(i, e.target.value)}
-              value={customer.prevUnits || "0"}
+              value={customer.prevUnits || ""}
               name="lastMonth"
               className="border border-white bg-black rounded p-1"
               type="number"
             />
             <input
               onChange={(e) => handleLatestChange(i, e.target.value)}
-              value={customer.latestUnits || "0"}
+              value={customer.latestUnits || ""}
               name="thisMonth"
               className="border border-white bg-black rounded p-1"
               type="number"
